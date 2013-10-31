@@ -1,0 +1,13 @@
+#handle_model_cad_transformed_scaled.pcd
+#CAD_Handles/handle_0.pcd
+#CAD_Handles/handle_1.pcd
+#CAD_Handles/handle_2.pcd
+#CAD_Handles/handle_3.pcd
+#CAD_Handles/handle_4.pcd
+#CAD_Handles/handle_5.pcd
+CAD_Handles/handle_6.pcd
+#CAD_Handles/handle_7.pcd
+#CAD_Handles/handle_8.pcd
+CAD_Handles/handle_9.pcd
+#CAD_Handles/handle_10.pcd
+#CAD_Handles/handle_11.pcd
