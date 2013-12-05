@@ -15,13 +15,12 @@ void loadModelsFromFile(std::string file, std::vector<pcl::PointCloud<PointT>::P
 	while(input.good())
 	{
 		std::getline (input, filename);
-		std::cout << "Load model: " << filename << std::endl;
+//		std::cout << "Load model: " << filename << std::endl;
 		if (filename.empty () || filename.at (0) == '#') // Skip blank lines or comments
 			continue;
 
 		pcl::PointCloud<PointT>::Ptr tmp(new pcl::PointCloud<PointT>);
 		pcl::io::loadPCDFile(filename, *tmp);
-		std::cout << tmp->size() << std::endl;
 		models.push_back(tmp);
 	}
 	input.close ();
@@ -42,10 +41,10 @@ void showHelp (char *filename)
 	std::cout << "     --rf_rad val:           Reference frame radius (default 0.015)" << std::endl;
 	std::cout << "     --descr_rad val:        Descriptor radius (default 0.02)" << std::endl;
 	std::cout << "     --cg_size val:          Cluster size (default 0.01)" << std::endl;
-	std::cout << "      val:        Clustering threshold (default 5)" << std::endl;
+	std::cout << "     --cg_thresh:            Clustering threshold (default 5)" << std::endl;
 	std::cout << "     --ne_radius val:        Normal estimation radius (default 0.02)" << std::endl;
 	std::cout << "     --leaf_size val:        Leaf size of the voxel grid (default 0.001)" << std::endl << std::endl;
-
+	std::cout << "     --knn val:              Number of k-Nearest Neighbor (default 1)" << std::endl << std::endl;
 }
 
 
@@ -61,7 +60,7 @@ int main (int argc, char *argv[])
 	float model_ss(0.0015);
 	float rf_rad(0.07);
 	float scene_ss(0.0015);
-
+	float knn(10);
 
 	if (pcl::console::find_switch (argc, argv, "-h"))
 	{
@@ -105,6 +104,9 @@ int main (int argc, char *argv[])
 	pcl::console::parse_argument (argc, argv, "--ne_radius", ne_radius);
 	obj_rec.setNeRadius(ne_radius);
 
+	pcl::console::parse_argument (argc, argv, "--knn", ne_radius);
+	obj_rec.setNeRadius(knn);
+
 //	std::vector<int> filenames;
 //	filenames = pcl::console::parse_file_extension_argument (argc, argv, ".pcd");
 //	if (filenames.size () != 1)
@@ -141,13 +143,14 @@ int main (int argc, char *argv[])
 //	}
 
 	// Debug information
-	//std::fstream output("output.txt",  ios::out|ios::app);
-	//output << "scene: " << scene_filename << std::endl;
-	//output << "model: " << model_filename << std::endl;
+//	std::fstream output("params.dat",  ios::out|ios::app);
+//	output << model_ss << ' ' << scene_ss << ' ' << rf_rad << ' ' << descr_rad << ' ' << cg_size << ' ' << ne_radius << ' ' << cg_thresh << std::endl;
+//	output << "scene: " << scene_filename << std::endl;
+//	output << "model: " << model_filename << std::endl;
 
 	std::vector<pcl::PointCloud<PointT>::Ptr > models;
 	loadModelsFromFile(model_filename, models);
-	std::cout << models.size() << std::endl;
+
 	obj_rec.loadModel(models);
 	obj_rec.recognize(scene);
 }

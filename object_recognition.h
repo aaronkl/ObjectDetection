@@ -14,6 +14,8 @@
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/features/shot_omp.h>
 #include <pcl/features/board.h>
+#include <pcl/features/pfh.h>
+#include <pcl/features/pfhrgb.h>
 #include <pcl/keypoints/iss_3d.h>
 #include <pcl/keypoints/uniform_sampling.h>
 #include <pcl/recognition/cg/hough_3d.h>
@@ -40,6 +42,8 @@ typedef pcl::PointXYZRGBA PointT;
 typedef pcl::Normal NormalType;
 typedef pcl::ReferenceFrame RFType;
 typedef pcl::SHOT352 DescriptorType;
+//typedef pcl::PFHSignature125 DescriptorType;
+//typedef pcl::PFHRGBSignature250 DescriptorType;
 
 class ObjectRecognition
 {
@@ -59,23 +63,36 @@ public:
 	 */
 	void loadModel(std::vector<pcl::PointCloud<PointT>::Ptr> &models);
 
+
 	/*
 	 * Setter functions
 	 */
 	void setLeafSize(float leafSize) {  _leaf_size = leafSize; 	}
+
 	void setNeRadius(float neRadius) { _ne_radius = neRadius; }
+
 	void setCgSize(float cgSize) { _cg_size = cgSize;	}
+
 	void setCgThresh(float cgThresh) {	_cg_thresh = cgThresh;	}
+
 	void setDescrRad(float descrRad) {_descr_rad = descrRad;	}
+
 	void setModelSs(float modelSs) {	_model_ss = modelSs;}
+
 	void setRfRad(float rfRad) {	_rf_rad = rfRad;}
+
 	void setSceneSs(float sceneSs) {	_scene_ss = sceneSs;}
+
 	void setShowCorrespondences(bool showCorrespondences) {	_show_correspondences = showCorrespondences;}
+
 	void setShowVisualization(bool showVisualization) {	_show_visualization = showVisualization; }
+
 	void setUseCloudResolution(bool useCloudResolution) { _use_cloud_resolution = useCloudResolution; }
 
+	void setKnn(int knn) { _knn = knn; }
 
 protected:
+
 	double computeCloudResolution (const pcl::PointCloud<PointT>::ConstPtr &cloud);
 
 	void computeKeypoints(pcl::PointCloud<PointT>::Ptr &cloud, pcl::PointCloud<PointT>::Ptr &keypoints, double resolution);
@@ -96,7 +113,7 @@ protected:
 	void groupCorrespondences(pcl::PointCloud<PointT>::Ptr &scene, pcl::PointCloud<PointT>::Ptr &scene_keypoints,
 			pcl::PointCloud<PointT>::Ptr &model, pcl::PointCloud<PointT>::Ptr &model_keypoints);
 
-	float refinement(const pcl::PointCloud<PointT>::Ptr &target, const pcl::PointCloud<PointT>::Ptr &source, Eigen::Matrix4f &final);
+	bool refinement(const pcl::PointCloud<PointT>::Ptr &target, const pcl::PointCloud<PointT>::Ptr &source, Eigen::Matrix4f &final);
 
 	void verify(pcl::PointCloud<PointT>::Ptr &scene);
 
@@ -121,7 +138,7 @@ private:
 	std::vector<pcl::PointCloud<PointT>::ConstPtr> _final_models;
 
 	/*
-	 * Algorithm parameters
+	 * Parameters
 	 */
 	bool _show_visualization ;
 	bool _show_correspondences ;
@@ -134,6 +151,9 @@ private:
 	float _cg_thresh;
 	float _ne_radius;
 	float _leaf_size;
+	float _cluster_tolerance;
+	float _ransac_distance;
+	int _knn;
 };
 
 #endif /* OBJECT_RECOGNITION_H_ */
