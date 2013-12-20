@@ -104,7 +104,7 @@ int main (int argc, char *argv[])
 	pcl::console::parse_argument (argc, argv, "--ne_radius", ne_radius);
 	obj_rec.setNeRadius(ne_radius);
 
-	pcl::console::parse_argument (argc, argv, "--knn", ne_radius);
+	pcl::console::parse_argument (argc, argv, "--knn", knn);
 	obj_rec.setNeRadius(knn);
 
 //	std::vector<int> filenames;

@@ -8,6 +8,10 @@
 #ifndef OBJECT_RECOGNITION_H_
 #define OBJECT_RECOGNITION_H_
 
+#include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/common/common.h>
+#include <pcl/common/transforms.h>
+
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_cloud.h>
 #include <pcl/correspondence.h>
@@ -16,6 +20,8 @@
 #include <pcl/features/board.h>
 #include <pcl/features/pfh.h>
 #include <pcl/features/pfhrgb.h>
+#include <pcl/features/rift.h>
+#include <pcl/features/intensity_gradient.h>
 #include <pcl/keypoints/iss_3d.h>
 #include <pcl/keypoints/uniform_sampling.h>
 #include <pcl/recognition/cg/hough_3d.h>
@@ -37,13 +43,17 @@
 #include <pcl/segmentation/extract_clusters.h>
 #include <pcl/keypoints/sift_keypoint.h>
 
+#include <exception>
 
 typedef pcl::PointXYZRGBA PointT;
+//typedef pcl::PointXYZI PointT;
 typedef pcl::Normal NormalType;
 typedef pcl::ReferenceFrame RFType;
-typedef pcl::SHOT352 DescriptorType;
+//typedef pcl::Histogram<32> DescriptorType;
+//typedef pcl::SHOT352 DescriptorType;
 //typedef pcl::PFHSignature125 DescriptorType;
 //typedef pcl::PFHRGBSignature250 DescriptorType;
+typedef pcl::SHOT1344 DescriptorType;
 
 class ObjectRecognition
 {
