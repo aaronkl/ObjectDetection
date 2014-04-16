@@ -10,7 +10,6 @@
 
 	void Localization::point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& input)
 	{
-		std::cout << "start localization" << std::endl;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
 		pcl::PointCloud<pcl::PointXYZ>::Ptr unfiltered_cloud (new pcl::PointCloud<pcl::PointXYZ>);
 
@@ -52,52 +51,44 @@
 		extract.setNegative (true);
 		extract.filter (*final);
 
-		//			pcl::PointCloud<pcl::PointXYZ>::Ptr aligned (new pcl::PointCloud<pcl::PointXYZ> ());
-		//
-		//			pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
-		//			icp.setInputCloud(_model);
-		//			icp.setInputTarget(final);
-		//			icp.setMaxCorrespondenceDistance (0.9);
-		//			icp.setMaximumIterations (1000);
-		//			icp.setTransformationEpsilon (1e-8);
-		//			icp.setEuclideanFitnessEpsilon (1);
-		//			std::cout << "icp" << std::endl;
-		//
-		//			icp.align(*aligned);
-		//
-		//			std::cout << "has converged: " << icp.hasConverged() << " score: " <<
-		//					icp.getFitnessScore() << std::endl;
-		//			std::cout << icp.getFinalTransformation() << std::endl;
-		//
-		//
-		//			if(icp.hasConverged())
-		//			{
+	//	pcl::PointCloud<pcl::PointXYZ>::Ptr aligned (new pcl::PointCloud<pcl::PointXYZ> ());
 
-		Eigen::VectorXf grasp_position;
-		pcl::computeNDCentroid(*final, grasp_position);
-		//			pcl::computeNDCentroid(*aligned, grasp_position);
-		geometry_msgs::PoseStamped grasp_pose;
-		grasp_pose.pose.position.x = grasp_position[0];
-		grasp_pose.pose.position.y = grasp_position[1];
-		grasp_pose.pose.position.z = grasp_position[2];
-		//			grasp_pose.pose.orientation.w = grasp_position[3];
-		grasp_pose.header.frame_id = "/camera_depth_optical_frame";
-		grasp_pose.header.stamp = ros::Time::now();
+	//	pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
+	//	icp.setInputCloud(_model);
+	//	icp.setInputTarget(final);
+	//	icp.setMaxCorrespondenceDistance (0.9);
+	//	icp.setMaximumIterations (1000);
+	//	icp.setTransformationEpsilon (1e-8);
+	//	icp.setEuclideanFitnessEpsilon (1);
+	
+	//	icp.align(*aligned);
 
-		_pub_pose.publish(grasp_pose);
-		sensor_msgs::PointCloud2 message;
-		pcl::toROSMsg(*final, message);
-		message.header.frame_id = "/camera_depth_optical_frame";
-		message.header.stamp = ros::Time::now();
-		_pub_cloud.publish(message);
+	//	std::cout << icp.getFinalTransformation() << std::endl;
 
-		//		}
+
+	//	if(icp.hasConverged())
+		{
+
+			Eigen::VectorXf centroid;
+			pcl::computeNDCentroid(*final, centroid);
+	//		pcl::computeNDCentroid(*aligned, centroid);
+			geometry_msgs::PoseStamped pose;
+			pose.pose.position.x = centroid[0];
+			pose.pose.position.y = centroid[1];
+			pose.pose.position.z = centroid[2];
+
+			pose.header.frame_id = "/camera_depth_optical_frame";
+			pose.header.stamp = ros::Time::now();
+			_pub_pose.publish(pose);
+		
+			sensor_msgs::PointCloud2 message;
+			pcl::toROSMsg(*final, message);
+	//		pcl::toROSMsg(*aligned, message);
+			message.header.frame_id = "/camera_depth_optical_frame";
+			message.header.stamp = ros::Time::now();
+			_pub_cloud.publish(message);
+			ROS_INFO("Pose estimated");
+		}
 
 	}
-
-
-
-
-
-
 

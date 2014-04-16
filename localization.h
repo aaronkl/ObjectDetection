@@ -18,7 +18,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <geometry_msgs/PoseStamped.h>
-//#include <pcl_ros/point_cloud.h>
+#include <pcl_ros/point_cloud.h>
 #include <sensor_msgs/PointCloud2.h>
 // PCL specific includes
 //#include <pcl/ros/conversions.h>
@@ -52,9 +52,9 @@ public:
 	:_model (new pcl::PointCloud<pcl::PointXYZ>)
 	{
 
-		_point_cloud_sub = _nh.subscribe("/points", 1,&Localization::point_cloud_callback, this);
-		_pub_pose = _nh.advertise<geometry_msgs::PoseStamped>("/grasp_pose", 1);
-		_pub_cloud = _nh.advertise<sensor_msgs::PointCloud2>("/final", 1);
+		_point_cloud_sub = _nh.subscribe("/object_detection/points", 1,&Localization::point_cloud_callback, this);
+		_pub_pose = _nh.advertise<geometry_msgs::PoseStamped>("/object_detection/pose", 1);
+		_pub_cloud = _nh.advertise<sensor_msgs::PointCloud2>("/object_detection/final", 1);
 
 		if (pcl::io::loadPCDFile<pcl::PointXYZ> ("/home/kleinaa/devel/workspace/ObjectRecognition/Handles/model.pcd", *_model) == -1)
 		{
@@ -78,3 +78,4 @@ private:
 
 
 #endif /* LOCALIZATION_H_ */
+
